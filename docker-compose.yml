@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  jenkins:
+    build:
+      context: ./
+    volumes:
+    - ./jenkins_home:/var/jenkins_home
+    ports:
+    - "8090:8080"
+    - "60000:50000"
+    restart: always
