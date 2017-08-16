@@ -34,18 +34,23 @@ RUN tar xzvf /opt/$ANDROID_SDK_ZIP -C /opt/ && \
 
 # Install required build-tools
 RUN	echo "y" | android update sdk -u -a --filter platform-tools,android-23,build-tools-23.0.3 && \
-	chmod -R 755 $ANDROID_HOME
+	chmod -R 777 $ANDROID_HOME
 	
 RUN	echo "y" | android update sdk -u -a --filter platform-tools,android-24,build-tools-24.0.1 && \
-	chmod -R 755 $ANDROID_HOME
+	chmod -R 777 $ANDROID_HOME
 
 # Install 32-bit compatibility for 64-bit environments
 RUN apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 zlib1g:i386 -y
 
+# Create the license folder
+RUN mkdir "$ANDROID_HOME/licenses" || true
+RUN echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+RUN echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+
 # Cleanup
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-	
+
 USER jenkins
 
 # List desired Jenkins plugins here
